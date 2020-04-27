@@ -13,7 +13,7 @@ const uri = "mongodb+srv://Lucasbm777:senhasenha@data-nwe37.mongodb.net/test?ret
 
 
 var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema; // Scheema já conectado no mongoose
 mongoose.Promise = global.Promise;
 mongoose.connect(uri);
 
@@ -41,18 +41,67 @@ var User = mongoose.model('User', userSchema);
 app.use(bodyParser.urlencoded({ extend: false }));
 app.use(bodyParser.json());
 
+
+
+// Tudo que interessa vem aqui de baixo.
+// Está tudo dividido, basta procurar no F a função que vcê quer fazer do CRUD
+
+
 //função de GET para importar coisas do BD
 app.get('/', async(req, res) => {
     console.log('hello mundo')
     res.send('hello world')
-    await auth();
+    await auth(req.body);
 
 })
 
-app.put('/att', async(req, res) => {
+
+async function auth(req) { // função pra bater as coisas do BD, pode ser alterada pro que quiser.
+    const userFromDb = await User.findOne({ _id: req._id }); // procura pelo valor de ID criado pelo mongo automaticamente
+    console.log(userFromDb);
+    if (userFromDb == null) {
+        console.log('o sistema não encontrou usuários/senha na data base.');
+    }
+
+}
+
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+app.put('/att', async(req, res) => { //UPDATE
     await updater(req.body)
 
 })
+
+
+//função de UPDATE
+async function updater(req) {
+    console.log(req.Password, ",é a nova senha de: ", req.Username) //Atualmente, procura por um nome mas pode procurar pelo ID se quiserem. 
+    const UserUP = await User.updateOne({ Username: req.Username }, { $set: { Password: req.Password } }) //atenção na QUERY aqui. Você passa objetos "{}"""
+
+
+}
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+app.delete('/dell', async(req, res) => { //DELETE , pelo ID
+    await deleter(req.body)
+})
+
+async function deleter(req) {
+
+    console.log(req._id)
+    const UserUP = await User.deleteOne({ _id: req._id }) //atenção na QUERY aqui. Você passa objetos "{}"""
+    console.log(UserUP)
+
+}
+
 
 
 app.get('/logi', authenticateToken, (req, res) => { //função no middleware pra verificar
@@ -60,7 +109,30 @@ app.get('/logi', authenticateToken, (req, res) => { //função no middleware pra
 })
 
 
-app.post('/posts', (req, res) => {
+
+// função que pega o token e devolve a senha.
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'] //pega do header.
+    const token = authHeader && authHeader.split(' ')[1] //SE achar o authHeader - explita do famoso Bearer.
+    if (token == null) return res.sendStatus(401) //token não encontrado
+
+    jwt.verify(token, process.env.token, (err, cryp) => {
+        if (err) return res.sendStatus(403) //Token encontrado mas não correto
+        req.Password = cryp
+        next()
+    })
+}
+
+//Shcma definido da pra usar o método acima.
+
+
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+app.post('/posts', (req, res) => { //CREATE, cria as coisas né.
     const cryp = req.body.Password //cria variavel com o Password.
     const acessToken = jwt.sign(cryp, process.env.token) // usa o JWT para encryptar o Password. por issso "cryp"
 
@@ -80,37 +152,3 @@ app.post('/posts', (req, res) => {
             res.status(400).send("Unable to save to database");
         });
 });
-
-async function auth() { // função pra bater as coisas do BD, pode ser alterada pro que quiser.
-    const userFromDb = await User.findOne({ _id: '5e8638db4da2aa41a0d9d99d' }); // procura pelo valor de ID criado pelo mongo automaticamente
-    console.log(userFromDb);
-    if (userFromDb == null) {
-        console.log('o sistema não encontrou usuários/senha na data base.');
-    }
-
-}
-
-
-{}
-//função de UPDATE
-async function updater(req) {
-    console.log(req.Username)
-    const UserUP = await User.updateOne({ Username: "Lucas" }, { $set: { Password: req.Password } }) //atenção na QUERY aqui. Você passa objetos "{}"""
-    console.log(UserUP)
-
-}
-
-// função que pega o token e devolve a senha.
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'] //pega do header.
-    const token = authHeader && authHeader.split(' ')[1] //SE achar o authHeader - explita do famoso Bearer.
-    if (token == null) return res.sendStatus(401) //token não encontrado
-
-    jwt.verify(token, process.env.token, (err, cryp) => {
-        if (err) return res.sendStatus(403) //Token encontrado mas não correto
-        req.Password = cryp
-        next()
-    })
-}
-
-//Shcma definido da pra usar o método acima.

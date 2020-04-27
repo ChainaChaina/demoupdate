@@ -1,10 +1,30 @@
 POST http://localhost:3000/posts
 Content-Type: application/json
 
-{ "Username":"teste1", "Password":"testee"} 
+{ "Username":"terminei esse CRUD", "Password":"Foi facin"} 
+
 ###
-GET http://localhost:3000/           
- //pega o cara pelo metodo de serach.
+GET http://localhost:3000/       
+Content-Type: application/json
+
+{ "_id": "5e8638fd4da2aa41a0d9d99f"} 
+
+###
+PUT  http://localhost:3000/att
+Content-Type: application/json
+
+{"Username": "Millena", "Password":"chaina123"} 
+
+
+###
+DELETE   http://localhost:3000/dell
+Content-Type: application/json
+
+{"_id": "5e8638db4da2aa41a0d9d99d" } 
+
+
+
+
 ###
 GET http://localhost:3000/logi
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.MTIzNDU2.uTOeleGuWdOvcmqMRFQMtXL3nB8NMzJT61x2Z89eEfM
@@ -15,8 +35,8 @@ POST  http://localhost:3000/login
 Content-Type: application/json
 // apenas usado no server2.js
 { "Username": "caio"} 
-###
-PUT  http://localhost:3000/att
-Content-Type: application/json
 
-{ "Username": "caio", "Password":"mas levanto"} 
+
+
+
+
