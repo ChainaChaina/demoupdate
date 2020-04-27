@@ -1,0 +1,22 @@
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+{ "Username":"teste1", "Password":"testee"} 
+###
+GET http://localhost:3000/           
+ //pega o cara pelo metodo de serach.
+###
+GET http://localhost:3000/logi
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.MTIzNDU2.uTOeleGuWdOvcmqMRFQMtXL3nB8NMzJT61x2Z89eEfM
+
+
+###
+POST  http://localhost:3000/login
+Content-Type: application/json
+// apenas usado no server2.js
+{ "Username": "caio"} 
+###
+PUT  http://localhost:3000/att
+Content-Type: application/json
+
+{ "Username": "caio", "Password":"mas levanto"} 
