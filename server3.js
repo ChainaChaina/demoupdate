@@ -152,3 +152,6 @@ app.post('/posts', (req, res) => { //CREATE, cria as coisas né.
             res.status(400).send("Unable to save to database");
         });
 });
+
+
+//Agradecimentos ao Shayron por ter me ajudado em todo obstáculo

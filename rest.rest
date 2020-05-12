@@ -1,19 +1,42 @@
 POST http://localhost:3000/posts
 Content-Type: application/json
 
-{ "Username":"terminei esse CRUD", "Password":"Foi facin"} 
+{ "Username":"Carona1", "Password":"4rodas", "Limite": "4", "Vagas": "4", "interesses": ""} 
 
 ###
 GET http://localhost:3000/       
 Content-Type: application/json
 
-{ "_id": "5e8638fd4da2aa41a0d9d99f"} 
+{ "_id": "5eb794615d629a3010da14b7"} 
+
+### lista de interessados.
+GET http://localhost:3000/intere      
+Content-Type: application/json
+
+{ "_id": "5e8638eb4da2aa41a0d9d99e"} 
+
 
 ###
 PUT  http://localhost:3000/att
 Content-Type: application/json
 
-{"Username": "Millena", "Password":"chaina123"} 
+{"_id": "5eb6f03f4c09491a50719226"} 
+
+
+###
+
+PUT  http://localhost:3000/interesse
+Content-Type: application/json
+
+{"_id": "5eb79230e5d5f326b4fad8b1"} 
+
+
+###
+
+PUT  http://localhost:3000/inte
+Content-Type: application/json
+
+{"_id": "5eb7946b5d629a3010da14b8", "interesse": "id do cara2"} 
 
 
 ###
