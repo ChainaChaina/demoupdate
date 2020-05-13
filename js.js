@@ -18,12 +18,13 @@ mongoose.Promise = global.Promise;
 mongoose.connect(uri);
 
 MongoClient.connect(uri, (err, db) => {
-    if (err) return console.log(err)
-    var dbo = db.db("Caronas");
+        if (err) return console.log(err)
+        var dbo = db.db("Caronas");
 
 
-})
-
+    })
+    // OLA
+    // ESSE É O GUIA PRATICO DO CHAINA PARA ESSE DOCUMENTO
 
 app.listen(3000, () => {
     console.log(' CARONA running at 3000')
@@ -38,9 +39,9 @@ var CaronaSchema = new Schema({
     "interesses": String,
 })
 
-var Carona = mongoose.model('Carona', CaronaSchema);
+var Carona = mongoose.model('Carona', CaronaSchema); // DEFINE O SCHEEMA COM NOME CARONA
 
-var userSchema = new Schema({
+var userSchema = new Schema({ //O QUE TEM DENTRO DELE:
     "Username": String,
     "Password": String,
     "Token": String,
@@ -59,7 +60,7 @@ app.use(bodyParser.json());
 // Está tudo dividido, basta procurar no F a função que vcê quer fazer do CRUD
 
 
-//função de GET para importar coisas do BD
+//IMPORTAR CARONA DO BD
 app.get('/', async(req, res) => {
     console.log('Procurando:')
     res.send('hello world')
@@ -81,7 +82,7 @@ async function auth(req) { // função pra bater as coisas do BD, pode ser alter
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-
+// DELETE DE SEMPRE. 
 app.delete('/dell', async(req, res) => { //DELETE , pelo ID
     await deleter(req.body)
 })
@@ -97,7 +98,7 @@ async function deleter(req) {
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-app.post('/posts', (req, res) => { //CREATE, cria as coisas né.
+app.post('/posts', (req, res) => { //CREATE, CRIA A CARONA NO BD
     const cryp = req.body.Password //cria variavel com o Password.
     const acessToken = jwt.sign(cryp, process.env.token) // usa o JWT para encryptar o Password. por issso "cryp"
 
@@ -122,7 +123,7 @@ app.post('/posts', (req, res) => { //CREATE, cria as coisas né.
 
 
 
-app.put('/interesse', async(req, res) => { //UPDATE
+app.put('/interesse', async(req, res) => { //FUNÇÃO DA LISTA DE INTERESSE: VÊ SE TEM VAGA NO CARRO E DIMINUI AS VAGAS NO CARRO
     await updater(req.body)
 
 })
@@ -134,7 +135,7 @@ async function updater(req) {
     if (CaronaFromDb.Vagas > 0) {
         await Carona.updateOne({ Vagas: CaronaFromDb.Vagas }, { $set: { Vagas: (CaronaFromDb.Vagas - 1) } })
     } else {
-        console.log("Opa, acabou a vida boa") //mensagem de que deue rror
+        console.log("Opa, acabou a vida boa. Não temos mais espaço nesse carro :(") //mensagem de que deue rror
     }
     console.log((CaronaFromDb.Vagas - 1)) // se der -1, acabou!!
 
@@ -143,6 +144,7 @@ async function updater(req) {
 
 
 //MARCAR INTERESSE NA CARONA
+//ESSA FUNÇÃO: cira uma listta de interessados. Você passa o ID do cara que se interessou por aqui e ele add e salva a lista. 
 
 app.put('/inte', async(req, res) => { //UPDATE
     await inte(req.body)
@@ -168,6 +170,7 @@ async function inte(req) {
 
 
 //função de GET para importar coisas do BD
+// ESSA FUNÇÃO RETORNA A LISTA DE INTERESSADOS: vai mostrar no console id por id dos interessados na carona :)
 app.get('/intere', async(req, res) => {
     console.log('Procurando:')
     res.send('hello world')
@@ -176,8 +179,8 @@ app.get('/intere', async(req, res) => {
 })
 
 
-async function authInteresse(req) { // função pra bater as coisas do BD, pode ser alterada pro que quiser.
-    MongoClient.connect(uri, (err, db) => {
+async function authInteresse(req) { // a função que é chamada acima é esta.
+    MongoClient.connect(uri, (err, db) => { // como estamos pegando algo de OUTRO BD esse mongoose garante que entramos no lugar certo
         if (err) return console.log(err)
         var dbo = db.db("users");
 
